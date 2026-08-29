@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: team7-backend
+    env: docker
+    autoDeploy: true
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
