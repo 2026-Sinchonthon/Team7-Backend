@@ -1,5 +1,6 @@
 # Team7 Backend
-
+##배포url
+ https://team7-backend-p62s.onrender.com/
 ## 서비스 설명
 - **프로젝트명**: 모아모아
 - **슬로건**: 골목이 모이면, 배달이 열린다
