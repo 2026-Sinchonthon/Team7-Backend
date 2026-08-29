@@ -1,3 +1,55 @@
 package sinchonthon.demo.domain.discovery.controller;
-import java.util.*; import lombok.RequiredArgsConstructor; import org.springframework.web.bind.annotation.*; import sinchonthon.demo.domain.discovery.auth.CurrentMemberProvider; import sinchonthon.demo.domain.discovery.dto.CreateDraftOrderRequest; import sinchonthon.demo.domain.discovery.entity.*; import sinchonthon.demo.domain.discovery.service.DiscoveryService; import sinchonthon.demo.domain.store.*; import sinchonthon.demo.global.response.ApiResponse;
-@RestController @RequestMapping("/api/v1") @RequiredArgsConstructor public class DiscoveryController { private final DiscoveryService s; private final CurrentMemberProvider c; @GetMapping("/recruitments") public ApiResponse<List<Summary>> list(){return ApiResponse.success(s.list().stream().map(Summary::from).toList());} @GetMapping("/recruitments/{id}") public ApiResponse<Detail> get(@PathVariable Long id){return ApiResponse.success(Detail.from(s.get(id)));} @PostMapping("/recruitments/{id}/draft-orders") public ApiResponse<Draft> create(@PathVariable Long id,@RequestBody CreateDraftOrderRequest r){return ApiResponse.success(Draft.from(s.create(c.currentMemberId(),id,r)));} @PostMapping("/recruitments/{slotId}/draft-orders/{draftId}/payment") public ApiResponse<Draft> pay(@PathVariable Long slotId,@PathVariable Long draftId){return ApiResponse.success(Draft.from(s.pay(c.currentMemberId(),slotId,draftId)));} public record Summary(Long recruitmentId,String storeName){static Summary from(RecruitmentSlot x){return new Summary(x.getId(),x.getStore().getName());}} public record Detail(Long recruitmentId,String storeName,String description,List<MenuInfo> menus){static Detail from(RecruitmentSlot x){return new Detail(x.getId(),x.getStore().getName(),x.getStore().getDescription(),x.getStore().getMenus().stream().map(MenuInfo::from).toList());}} public record MenuInfo(Long menuId,String name,long price){static MenuInfo from(Menu x){return new MenuInfo(x.getId(),x.getName(),x.getPrice());}} public record Draft(Long draftOrderId,String storeName,String orderNumber,String status,int totalAmount,List<Item> items){static Draft from(DraftOrder x){return new Draft(x.getId(),x.getRecruitmentSlot().getStore().getName(),x.getDraftOrderNumber(),x.getStatus().name(),x.getTotalAmount(),x.getItems().stream().map(Item::from).toList());}} public record Item(String menuName,int unitPrice,int quantity){static Item from(DraftOrderItem x){return new Item(x.getMenuName(),x.getUnitPrice(),x.getQuantity());}} }
+
+import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+import sinchonthon.demo.domain.discovery.auth.CurrentMemberProvider;
+import sinchonthon.demo.domain.discovery.dto.CreateDraftOrderRequest;
+import sinchonthon.demo.domain.discovery.entity.*;
+import sinchonthon.demo.domain.discovery.service.DiscoveryService;
+import sinchonthon.demo.domain.store.*;
+import sinchonthon.demo.global.response.ApiResponse;
+
+@RestController
+@RequestMapping("/api/v1")
+@RequiredArgsConstructor
+public class DiscoveryController {
+    private final DiscoveryService discoveryService;
+    private final CurrentMemberProvider currentMemberProvider;
+
+    @GetMapping("/recruitments")
+    public ApiResponse<List<Summary>> getRecruitments() {
+        return ApiResponse.success(discoveryService.list().stream().map(Summary::from).toList());
+    }
+
+    @GetMapping("/recruitments/{recruitmentId}")
+    public ApiResponse<Detail> getRecruitment(@PathVariable Long recruitmentId) {
+        return ApiResponse.success(Detail.from(discoveryService.get(recruitmentId)));
+    }
+
+    @PostMapping("/recruitments/{recruitmentId}/draft-orders")
+    public ApiResponse<Draft> createDraftOrder(@PathVariable Long recruitmentId, @RequestBody CreateDraftOrderRequest request) {
+        return ApiResponse.success(Draft.from(discoveryService.create(currentMemberProvider.currentMemberId(), recruitmentId, request)));
+    }
+
+    @PostMapping("/recruitments/{recruitmentId}/draft-orders/{draftOrderId}/payment")
+    public ApiResponse<Draft> pay(@PathVariable Long recruitmentId, @PathVariable Long draftOrderId) {
+        return ApiResponse.success(Draft.from(discoveryService.pay(currentMemberProvider.currentMemberId(), recruitmentId, draftOrderId)));
+    }
+
+    public record Summary(Long recruitmentId, String storeName) {
+        static Summary from(RecruitmentSlot slot) { return new Summary(slot.getId(), slot.getStore().getName()); }
+    }
+    public record Detail(Long recruitmentId, String storeName, String description, List<MenuResponse> menus) {
+        static Detail from(RecruitmentSlot slot) { return new Detail(slot.getId(), slot.getStore().getName(), slot.getStore().getDescription(), slot.getStore().getMenus().stream().map(MenuResponse::from).toList()); }
+    }
+    public record MenuResponse(Long menuId, String name, long price) {
+        static MenuResponse from(Menu menu) { return new MenuResponse(menu.getId(), menu.getName(), menu.getPrice()); }
+    }
+    public record Draft(Long draftOrderId, String storeName, String orderNumber, String status, int totalAmount, List<Item> items) {
+        static Draft from(DraftOrder order) { return new Draft(order.getId(), order.getRecruitmentSlot().getStore().getName(), order.getDraftOrderNumber(), order.getStatus().name(), order.getTotalAmount(), order.getItems().stream().map(Item::from).toList()); }
+    }
+    public record Item(String menuName, int unitPrice, int quantity) {
+        static Item from(DraftOrderItem item) { return new Item(item.getMenuName(), item.getUnitPrice(), item.getQuantity()); }
+    }
+}
