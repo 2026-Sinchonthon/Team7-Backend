@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,7 @@ public class DraftOrder {
     private String draftOrderNumber;
     @Enumerated(EnumType.STRING) private DraftOrderStatus status;
     private int totalAmount;
+    private LocalDateTime paidAt;
     @Enumerated(EnumType.STRING) private ParticipantGroup participantGroup;
     @Enumerated(EnumType.STRING) private PickupLocation pickupLocation;
     @OneToMany(mappedBy = "draftOrder", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,6 +49,6 @@ public class DraftOrder {
     }
     public void setDraftOrderNumber(String value) { this.draftOrderNumber = value; }
     public void select(ParticipantGroup group, PickupLocation location) { this.participantGroup = group; this.pickupLocation = location; }
-    public void pay() { this.status = DraftOrderStatus.PAID; }
+    public void pay() { this.status = DraftOrderStatus.PAID; this.paidAt = LocalDateTime.now(); }
     public void addItem(sinchonthon.demo.domain.store.Menu menu, int quantity) { items.add(new DraftOrderItem(this, menu, quantity)); }
 }
