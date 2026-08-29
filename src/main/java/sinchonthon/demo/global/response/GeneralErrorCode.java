@@ -20,6 +20,8 @@ public enum GeneralErrorCode implements BaseErrorCode {
     ACTIVE_SLOT_ALREADY_EXISTS(HttpStatus.CONFLICT, "SLOT4091", "이미 모집 중인 슬롯이 있습니다."),
     INVALID_SLOT_TIME(HttpStatus.BAD_REQUEST, "SLOT4001", "수령 시간은 00분 또는 30분이어야 합니다."),
     SLOT_CANCEL_NOT_ALLOWED(HttpStatus.CONFLICT, "SLOT4092", "현재 상태에서는 모집을 취소할 수 없습니다."),
+    SLOT_NOT_RECRUITING(HttpStatus.CONFLICT, "SLOT4093", "현재 모집 중인 슬롯이 아닙니다."),
+    SLOT_ALREADY_FULL(HttpStatus.CONFLICT, "SLOT4094", "모집 인원이 이미 가득 찼습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 오류가 발생했습니다.");
 
     private final HttpStatus status;
