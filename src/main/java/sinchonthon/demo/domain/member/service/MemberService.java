@@ -28,6 +28,7 @@ public class MemberService {
         Member member = Member.builder()
                 .loginId(request.getLoginId())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .phoneNumber(request.getPhoneNumber())
                 .role(MemberRole.STORE)
                 .storeName(request.getStoreName())
                 .build();
@@ -42,6 +43,7 @@ public class MemberService {
         Member member = Member.builder()
                 .loginId(request.getLoginId())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .phoneNumber(request.getPhoneNumber())
                 .role(MemberRole.STUDENT)
                 .university(request.getUniversity())
                 .nickname(request.getNickname())
