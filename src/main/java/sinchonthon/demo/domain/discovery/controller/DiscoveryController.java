@@ -1,6 +1,7 @@
 package sinchonthon.demo.domain.discovery.controller;
 
 import java.util.List;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import sinchonthon.demo.domain.discovery.auth.CurrentMemberProvider;
@@ -28,7 +29,7 @@ public class DiscoveryController {
     }
 
     @PostMapping("/recruitments/{recruitmentId}/draft-orders")
-    public ApiResponse<Draft> createDraftOrder(@PathVariable Long recruitmentId, @RequestBody CreateDraftOrderRequest request) {
+    public ApiResponse<Draft> createDraftOrder(@PathVariable Long recruitmentId, @Valid @RequestBody CreateDraftOrderRequest request) {
         return ApiResponse.success(Draft.from(discoveryService.create(currentMemberProvider.currentMemberId(), recruitmentId, request)));
     }
 
