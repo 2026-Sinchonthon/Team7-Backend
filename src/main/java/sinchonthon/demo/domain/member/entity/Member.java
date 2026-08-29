@@ -27,6 +27,9 @@ public class Member {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private MemberRole role;
@@ -38,9 +41,10 @@ public class Member {
     private String nickname;
 
     @Builder
-    private Member(String loginId, String password, MemberRole role, String storeName, String university, String nickname) {
+    private Member(String loginId, String password, String phoneNumber, MemberRole role, String storeName, String university, String nickname) {
         this.loginId = loginId;
         this.password = password;
+        this.phoneNumber = phoneNumber;
         this.role = role;
         this.storeName = storeName;
         this.university = university;
