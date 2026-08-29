@@ -11,6 +11,7 @@ import sinchonthon.demo.domain.member.dto.StudentSignupRequest;
 import sinchonthon.demo.domain.member.entity.Member;
 import sinchonthon.demo.domain.member.entity.MemberRole;
 import sinchonthon.demo.domain.member.repository.MemberRepository;
+import sinchonthon.demo.domain.store.StoreRepository;
 import sinchonthon.demo.global.exception.BusinessException;
 import sinchonthon.demo.global.response.GeneralErrorCode;
 
@@ -19,6 +20,7 @@ import sinchonthon.demo.global.response.GeneralErrorCode;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final StoreRepository storeRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -65,7 +67,8 @@ public class MemberService {
                 member.getId(),
                 member.getLoginId(),
                 member.getRole(),
-                getRedirectPath(member.getRole())
+                getRedirectPath(member.getRole()),
+                getStoreId(member)
         );
     }
 
@@ -80,5 +83,14 @@ public class MemberService {
             return "/store";
         }
         return "/student";
+    }
+
+    private Long getStoreId(Member member) {
+        if (member.getRole() != MemberRole.STORE) {
+            return null;
+        }
+        return storeRepository.findByOwnerId(member.getId())
+                .map(store -> store.getId())
+                .orElse(null);
     }
 }
