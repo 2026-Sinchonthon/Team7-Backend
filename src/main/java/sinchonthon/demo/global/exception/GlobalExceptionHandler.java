@@ -1,8 +1,11 @@
 package sinchonthon.demo.global.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import sinchonthon.demo.global.response.ApiResponse;
@@ -22,6 +25,15 @@ public class GlobalExceptionHandler {
         String message = fieldError == null ? GeneralErrorCode.INVALID_REQUEST.getMessage() : fieldError.getDefaultMessage();
         ApiResponse<Void> response = new ApiResponse<>(false, GeneralErrorCode.INVALID_REQUEST.getCode(), message, null);
         return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler({
+            HttpMessageNotReadableException.class,
+            MissingRequestHeaderException.class,
+            HandlerMethodValidationException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleInvalidRequestException(Exception exception) {
+        return ResponseEntity.badRequest().body(ApiResponse.failure(GeneralErrorCode.INVALID_REQUEST));
     }
 
     @ExceptionHandler(Exception.class)
