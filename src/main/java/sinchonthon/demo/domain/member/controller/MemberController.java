@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sinchonthon.demo.domain.member.dto.LoginRequest;
+import sinchonthon.demo.domain.member.dto.LoginResponse;
 import sinchonthon.demo.domain.member.dto.StoreSignupRequest;
 import sinchonthon.demo.domain.member.dto.StudentSignupRequest;
 import sinchonthon.demo.domain.member.service.MemberService;
@@ -28,5 +30,10 @@ public class MemberController {
     public ApiResponse<?> signupStudent(@Valid @RequestBody StudentSignupRequest request) {
         memberService.signupStudent(request);
         return ApiResponse.success();
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ApiResponse.success(memberService.login(request));
     }
 }
