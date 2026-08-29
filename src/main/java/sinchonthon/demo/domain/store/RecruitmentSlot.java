@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sinchonthon.demo.global.exception.BusinessException;
+import sinchonthon.demo.global.response.GeneralErrorCode;
 
 @Getter
 @Entity
@@ -13,6 +15,8 @@ import lombok.NoArgsConstructor;
 public class RecruitmentSlot {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Long version;
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(nullable = false)
     private Store store;
     @Column(nullable = false, length = 100) private String title;
@@ -41,7 +45,8 @@ public class RecruitmentSlot {
     public void cancel() { this.status = RecruitmentSlotStatus.CANCELED; }
     public void fail() { this.status = RecruitmentSlotStatus.FAILED; }
     public void participate() {
-        if (this.status != RecruitmentSlotStatus.RECRUITING) throw new IllegalStateException("모집 중인 슬롯이 아닙니다.");
+        if (this.status != RecruitmentSlotStatus.RECRUITING) throw new BusinessException(GeneralErrorCode.SLOT_NOT_RECRUITING);
+        if (this.currentParticipantCount >= this.targetParticipantCount) throw new BusinessException(GeneralErrorCode.SLOT_ALREADY_FULL);
         this.currentParticipantCount++;
         if (this.currentParticipantCount >= this.targetParticipantCount) this.status = RecruitmentSlotStatus.CONFIRMED;
     }
