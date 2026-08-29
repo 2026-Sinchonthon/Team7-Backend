@@ -22,6 +22,7 @@ public enum GeneralErrorCode implements BaseErrorCode {
     SLOT_CANCEL_NOT_ALLOWED(HttpStatus.CONFLICT, "SLOT4092", "현재 상태에서는 모집을 취소할 수 없습니다."),
     SLOT_NOT_RECRUITING(HttpStatus.CONFLICT, "SLOT4093", "현재 모집 중인 슬롯이 아닙니다."),
     SLOT_ALREADY_FULL(HttpStatus.CONFLICT, "SLOT4094", "모집 인원이 이미 가득 찼습니다."),
+    ORDER_SHEET_NOT_READY(HttpStatus.CONFLICT, "ORDER4092", "목표 인원 달성 후 통합 주문서를 조회할 수 있습니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 오류가 발생했습니다.");
 
     private final HttpStatus status;
