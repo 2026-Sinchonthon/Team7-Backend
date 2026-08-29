@@ -8,6 +8,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import sinchonthon.demo.global.response.ApiResponse;
 import sinchonthon.demo.global.response.GeneralErrorCode;
 
@@ -34,6 +36,15 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ApiResponse<Void>> handleInvalidRequestException(Exception exception) {
         return ResponseEntity.badRequest().body(ApiResponse.failure(GeneralErrorCode.INVALID_REQUEST));
+    }
+
+    @ExceptionHandler({
+            NoHandlerFoundException.class,
+            NoResourceFoundException.class
+    })
+    public ResponseEntity<ApiResponse<Void>> handleNotFoundException(Exception exception) {
+        return ResponseEntity.status(GeneralErrorCode.NOT_FOUND.getStatus())
+                .body(ApiResponse.failure(GeneralErrorCode.NOT_FOUND));
     }
 
     @ExceptionHandler(Exception.class)
