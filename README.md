@@ -169,10 +169,13 @@ DB_PASSWORD=MYSQLPASSWORD
     "memberId": 1,
     "loginId": "student123",
     "role": "STUDENT",
-    "redirectPath": "/student"
+    "redirectPath": "/student",
+    "storeId": null
   }
 }
 ```
+
+사장 회원이 가게를 등록한 뒤 로그인하면 `storeId`가 함께 반환됩니다. 아직 가게를 등록하지 않은 경우 `storeId`는 `null`입니다.
 
 #### Member 필드
 

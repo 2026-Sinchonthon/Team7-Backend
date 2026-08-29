@@ -12,4 +12,5 @@ public class LoginResponse {
     private String loginId;
     private MemberRole role;
     private String redirectPath;
+    private Long storeId;
 }
