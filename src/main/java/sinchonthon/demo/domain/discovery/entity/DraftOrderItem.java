@@ -24,8 +24,8 @@ public class DraftOrderItem {
     private int unitPrice;
     private int quantity;
 
-    DraftOrderItem(DraftOrder draftOrder, RestaurantMenu menu, int quantity) {
+    DraftOrderItem(DraftOrder draftOrder, sinchonthon.demo.domain.store.Menu menu, int quantity) {
         this.draftOrder = draftOrder;
-        this.menuId = menu.getId(); this.menuName = menu.getName(); this.unitPrice = menu.getPrice(); this.quantity = quantity;
+        this.menuId = menu.getId(); this.menuName = menu.getName(); this.unitPrice = Math.toIntExact(menu.getPrice()); this.quantity = quantity;
     }
 }

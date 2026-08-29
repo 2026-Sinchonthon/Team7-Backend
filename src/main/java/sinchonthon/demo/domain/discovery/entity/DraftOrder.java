@@ -17,6 +17,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sinchonthon.demo.domain.member.entity.Member;
+import sinchonthon.demo.domain.store.ParticipantGroup;
+import sinchonthon.demo.domain.store.PickupLocation;
+import sinchonthon.demo.domain.store.RecruitmentSlot;
 
 @Getter
 @Entity
@@ -27,22 +30,23 @@ public class DraftOrder {
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(nullable = false)
     private Member student;
     @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(nullable = false)
-    private Recruitment recruitment;
+    private RecruitmentSlot recruitmentSlot;
     private String draftOrderNumber;
     @Enumerated(EnumType.STRING) private DraftOrderStatus status;
     private int totalAmount;
-    @ManyToOne(fetch = FetchType.LAZY) private ParticipantGroup participantGroup;
-    @ManyToOne(fetch = FetchType.LAZY) private PickupLocation pickupLocation;
+    @Enumerated(EnumType.STRING) private ParticipantGroup participantGroup;
+    @Enumerated(EnumType.STRING) private PickupLocation pickupLocation;
     @OneToMany(mappedBy = "draftOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DraftOrderItem> items = new ArrayList<>();
 
-    public DraftOrder(Member student, Recruitment recruitment, int totalAmount) {
+    public DraftOrder(Member student, RecruitmentSlot recruitmentSlot, int totalAmount) {
         this.student = student;
-        this.recruitment = recruitment;
+        this.recruitmentSlot = recruitmentSlot;
         this.totalAmount = totalAmount;
         this.status = DraftOrderStatus.DRAFT;
     }
     public void setDraftOrderNumber(String value) { this.draftOrderNumber = value; }
     public void select(ParticipantGroup group, PickupLocation location) { this.participantGroup = group; this.pickupLocation = location; }
-    public void addItem(RestaurantMenu menu, int quantity) { items.add(new DraftOrderItem(this, menu, quantity)); }
+    public void pay() { this.status = DraftOrderStatus.PAID; }
+    public void addItem(sinchonthon.demo.domain.store.Menu menu, int quantity) { items.add(new DraftOrderItem(this, menu, quantity)); }
 }
