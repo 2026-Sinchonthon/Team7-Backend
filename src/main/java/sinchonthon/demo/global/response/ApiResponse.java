@@ -17,6 +17,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, "COMMON200", "요청이 성공했습니다.", result);
     }
 
+    public static <T> ApiResponse<T> success(BaseSuccessCode successCode, T result) {
+        return new ApiResponse<>(true, successCode.getCode(), successCode.getMessage(), result);
+    }
+
     public static ApiResponse<Void> success() {
         return success(null);
     }
