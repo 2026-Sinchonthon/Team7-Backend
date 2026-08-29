@@ -40,4 +40,9 @@ public class RecruitmentSlot {
 
     public void cancel() { this.status = RecruitmentSlotStatus.CANCELED; }
     public void fail() { this.status = RecruitmentSlotStatus.FAILED; }
+    public void participate() {
+        if (this.status != RecruitmentSlotStatus.RECRUITING) throw new IllegalStateException("모집 중인 슬롯이 아닙니다.");
+        this.currentParticipantCount++;
+        if (this.currentParticipantCount >= this.targetParticipantCount) this.status = RecruitmentSlotStatus.CONFIRMED;
+    }
 }

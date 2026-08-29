@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface RecruitmentSlotRepository extends JpaRepository<RecruitmentSlot, Long> {
     boolean existsByStoreIdAndStatus(Long storeId, RecruitmentSlotStatus status);
     List<RecruitmentSlot> findAllByStoreIdOrderByPickupAtDesc(Long storeId);
+    List<RecruitmentSlot> findAllByStatusOrderByPickupAtAsc(RecruitmentSlotStatus status);
     Optional<RecruitmentSlot> findByIdAndStoreId(Long id, Long storeId);
     List<RecruitmentSlot> findAllByStatusAndDeadlineAtBefore(RecruitmentSlotStatus status, LocalDateTime time);
 }
