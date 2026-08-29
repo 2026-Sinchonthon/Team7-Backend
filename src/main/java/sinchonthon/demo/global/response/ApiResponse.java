@@ -14,7 +14,7 @@ public class ApiResponse<T> {
     private final T result;
 
     public static <T> ApiResponse<T> success(T result) {
-        return new ApiResponse<>(true, "COMMON200", "성공입니다.", result);
+        return new ApiResponse<>(true, "COMMON200", "요청이 성공했습니다.", result);
     }
 
     public static ApiResponse<Void> success() {
