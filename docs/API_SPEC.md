@@ -273,3 +273,40 @@ Base URL: `http://localhost:8080`
 | 404 | `SLOT4041` | 모집 슬롯을 찾을 수 없음 |
 | 409 | `SLOT4091` | 이미 모집 중인 슬롯이 있음 |
 | 409 | `SLOT4092` | 현재 상태에서 모집 취소 불가 |
+
+## 9. 사장님 통합 주문서 조회
+
+`GET /api/v1/owner/stores/{storeId}/slots/{slotId}/order-sheet`
+
+### Headers
+
+| 이름 | 필수 | 설명 |
+|---|---:|---|
+| `X-Member-Id` | O | 해당 상점 사장님 회원 ID |
+
+목표 인원이 달성되어 슬롯 상태가 `CONFIRMED`가 된 후 조회할 수 있습니다. `PAID` 상태인 참여자의 주문번호, 메뉴, 수량, 단가, 주문 금액과 통합 주문 총액을 반환합니다. 상점 소유자가 아니면 `403 FORBIDDEN`, 목표 미달이면 `409 ORDER4092`를 반환합니다.
+
+### Response `200 OK` (요약)
+
+```json
+{
+  "success": true,
+  "code": "COMMON200",
+  "result": {
+    "slotId": 1,
+    "status": "CONFIRMED",
+    "totalOrderAmount": 32000,
+    "orders": [
+      {
+        "orderId": 1,
+        "orderNumber": "DRAFT-00000001",
+        "studentId": 12,
+        "totalAmount": 16000,
+        "items": [
+          { "menuId": 1, "menuName": "김치찌개", "unitPrice": 8000, "quantity": 2, "lineAmount": 16000 }
+        ]
+      }
+    ]
+  }
+}
+```
